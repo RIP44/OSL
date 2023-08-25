@@ -1,0 +1,86 @@
+#include<stdio.h>
+#include<conio.h>
+
+int fr[3];  // An array to represent the frames in memory.
+void display();  // Function prototype to display the current state of frames.
+
+void main()
+{
+    int i, j, page[12];  // Variables for iteration and page references.
+    int f1 = 0, f2 = 0, pf = 0, frsize = 3, top = 0;  // Control and counter variables.
+    
+    // Input: Reading 12 pages to be referenced from the user.
+    printf("\nEnter the Pages:  ");
+    for (i = 0; i < 12; i++)
+    {
+        scanf("%d", &page[i]);
+    }
+    
+    // Initializing frame array with -1 to indicate empty frames.
+    for (i = 0; i < 3; i++)
+    {
+        fr[i] = -1;
+    }
+    
+    // Loop through each page reference in the 'page' array.
+    for (j = 0; j < 12; j++)
+    {
+        f1 = 0;  // Flag to check if the page is already in frame.
+        f2 = 0;  // Flag to check if the page can be accommodated in an empty frame.
+        
+        // Check if the current page is already in any of the frames.
+        for (i = 0; i < 12; i++)
+        {
+            if (fr[i] == page[j])
+            {
+                f1 = 1;  // Page found in frame.
+                f2 = 1;  // No need to proceed further.
+                break;
+            }
+        }
+        
+        // If page is not found in frames and there is an empty frame, allocate it.
+        if (f1 == 0)
+        {
+            for (i = 0; i < frsize; i++)
+            {
+                if (fr[i] == -1)
+                {
+                    fr[i] = page[j];
+                    f2 = 1;  // Page allocated in an empty frame.
+                    break;
+                }
+            }
+        }
+        
+        // If no empty frame is available, replace the oldest page with the current page.
+        if (f2 == 0)
+        {
+            fr[top] = page[j];
+            top++;
+            pf++;  // Page fault occurred.
+            
+            // Wrap around the 'top' index if it exceeds the frame size.
+            if (top >= frsize)
+            {
+                top = 0;
+            }
+        }
+        
+        display();  // Display the current state of frames.
+    }
+    
+    printf("\nNumber of Page faults-- %d", pf + frsize);  // Display total page faults.
+    getch();  // Wait for user input before exiting.
+}
+
+void display()
+{
+    int i;
+    printf("\n");
+    
+    // Display the contents of the frames.
+    for (i = 0; i < 3; i++)
+        printf("\t%d", fr[i]);
+}
+
