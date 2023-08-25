@@ -1,0 +1,52 @@
+#include <stdio.h>
+#include <conio.h>
+// Header files for input/output and console functions.
+
+void main() 
+{
+    int t[20], n, i, tohm[20], tot = 0, ih = 10;
+    // Declare arrays and variables.
+    float avhm;
+
+    // Prompt the user to input the number of tracks.
+    printf("Enter the number of tracks: ");
+    scanf("%d", &n);
+
+    // Prompt the user to input the tracks to be traversed.
+    printf("Enter the tracks to be traversed:\n");
+    for (i = 2; i < n + 2; i++) 
+    {
+        scanf("%d", &t[i]);
+    }
+
+    // Calculate the difference between the second track and the initial head position.
+    tohm[2] = t[2] - ih;
+
+    // Calculate the differences between consecutive tracks.
+    for (i = 2; i < n + 1; i++) 
+    {
+        tohm[i + 1] = t[i - 1] - t[i];
+        // If the difference is negative, make it positive.
+        if (tohm[i + 1] < 0)
+            tohm[i + 1] *= -1;
+    }
+
+    // Calculate the total difference between tracks.
+    for (i = 2; i <= n + 2; i++)
+        tot += tohm[i];
+
+    // Calculate the average header movement.
+    avhm = (float) tot / n;
+
+    // Print header for the table of tracks and their differences.
+    printf("Tracks traversed\tDifference between tracks\n");
+    // Display the tracks traversed and their differences.
+    for (i = 1; i < n + i; i++)
+        printf("%d\t\t\t%d\n", t[i], tohm[i]);
+
+    // Print the average header movement.
+    printf("\nAverage header movements: %f", avhm);
+    getch();
+    // Wait for a key press before exiting.
+}
+
