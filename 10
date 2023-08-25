@@ -1,0 +1,109 @@
+#include<stdio.h>
+#include<conio.h> // Non-standard header for console I/O (may be specific to certain environments)
+#include<math.h>
+#include<stdlib.h>
+
+int tp, philname[20], status[20], how_hungry, hu[20], choice;
+
+// Function prototypes
+void one();
+void two();
+
+void main()
+{
+    int i;
+    printf("\n\n**Dining Philosopher Problem**");
+    printf("\nEnter the total number of philosophers- ");
+    scanf("%d", &tp);
+
+    // Initializing philosopher names and statuses
+    for (i = 0; i < tp; i++)
+    {
+        philname[i] = (i + 1);
+        status[i] = 1; // Status 1 represents philosopher is thinking
+    }
+
+    printf("\nEnter how many are hungry- ");
+    scanf("%d", &how_hungry);
+
+    if (how_hungry == tp)
+    {
+        printf("\nDeadlock will occur!!...");
+        printf("\nExiting...");
+    }
+    else
+    {
+        // Gathering hungry philosophers' positions
+        for (i = 0; i < how_hungry; i++)
+        {
+            printf("\nEnter the philosopher %d's position-", i + 1);
+            scanf("%d", &hu[i]);
+            status[hu[i]] = 2; // Status 2 represents philosopher is hungry
+        }
+
+        do
+        {
+            printf("\n\n**Main Menu**");
+            printf("\n1)One can eat at a time\n2)Two can eat at the same time\n3)Exit\nEnter your choice");
+            scanf("%d", &choice);
+
+            switch (choice)
+            {
+            case 1:
+                one(); // Call function for allowing one philosopher to eat
+                break;
+            case 2:
+                two(); // Call function for allowing two philosophers to eat
+                break;
+            case 3:
+                exit(0); // Exit the program
+            default:
+                printf("\nThe entered choice is wrong....");
+                break;
+            }
+        } while (1); // Infinite loop, program continues until user chooses to exit
+    }
+}
+
+// Function for allowing one philosopher to eat
+void one()
+{
+    int pos = 0, x, i;
+    printf("\nAllowing only one philosopher to eat at a time!!");
+    for (i = 0; i < how_hungry; i++, pos++)
+    {
+        printf("\nPhilosopher %d is granted to eat......", philname[hu[pos]]);
+        for (x = pos; x < how_hungry; x++)
+        {
+            printf("\nPhilosopher %d is waiting....", philname[hu[x]]);
+        }
+    }
+}
+
+// Function for allowing two philosophers to eat
+void two()
+{
+    int i, j, s = 0, t, r, x;
+    printf("\nAllow two philosophers to eat at the same time..");
+    for (i = 0; i < how_hungry; i++)
+    {
+        for (j = i + 1; j < how_hungry; j++)
+        {
+            if (abs(hu[i] - hu[j]) >= 1 && abs(hu[i] - hu[j]) != 4)
+            {
+                printf("\nCombination %d", (s + 1));
+                t = hu[i];
+                r = hu[j];
+                s++;
+                printf("\nPhilosophers %d and %d are granted to eat", philname[hu[i]], philname[hu[j]]);
+                
+                // Display philosophers waiting to eat
+                for (x = 0; x < how_hungry; x++)
+                {
+                    if ((hu[x] != t) && (hu[x] != r))
+                        printf("\nPhilosopher %d is waiting", philname[hu[x]]);
+                }
+            }
+        }
+    }
+}
